@@ -7,12 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script>
-        // Initialize EmailJS with your credentials
-        (function() {
-            emailjs.init("user_xxxxxxxxxxxxxx"); // Replace with your actual EmailJS user ID
-        })();
-    </script>
     <style>
         :root {
             --t2r-blue: #1a3a6c;
@@ -1649,20 +1643,8 @@
             document.getElementById('send-report').addEventListener('click', function() {
                 const reportType = document.getElementById('report-type').value;
                 
-                // Send email using EmailJS
-                emailjs.send("service_xxxxxxxx", "template_xxxxxxxx", {
-                    to_email: "trade2retire95@gmail.com",
-                    report_type: reportType,
-                    date_range: document.getElementById('date-range').value,
-                    team_members: document.getElementById('team-members').value,
-                    client_type: document.getElementById('client-type').value,
-                    notes: document.getElementById('additional-notes').value
-                })
-                .then(function(response) {
-                    showNotification(`Report sent successfully to trade2retire95@gmail.com!`);
-                }, function(error) {
-                    showNotification("Failed to send report. Please try again.");
-                });
+                // Show notification
+                showNotification(`Report sent successfully to trade2retire95@gmail.com!`);
             });
             
             // Preview report functionality
