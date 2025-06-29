@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade2Retire | Customer Support Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS with your credentials
+        (function() {
+            emailjs.init("user_xxxxxxxxxxxxxx"); // Replace with your actual EmailJS user ID
+        })();
+    </script>
+    <style>
+        :root {
+            --t2r-blue: #1a3a6c;
+            --t2r-blue-light: #2c5282;
+            --t2r-blue-lighter: #3b6ba5;
+            --t2r-yellow: #f9c80e;
+            --t2r-yellow-light: #fad34d;
+            --t2r-yellow-lighter: #fbdf7d;
+            --t2r-white: #ffffff;
+            --t2r-light: #f8f9fa;
+            --t2r-dark: #0f1b30;
+            --t2r-success: #38a169;
+            --t2r-warning: #dd6b20;
+            --t2r-danger: #e53e3e;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --gradient-bg: linear-gradient(135deg, #0f1b30 0%, #1a3a6c 100%);
+            --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: var(--gradient-bg);
+            color: var(--t2r-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: rgba(10, 25, 47, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--t2r-white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .logo {
+            font-weight: 800;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--t2r-yellow) 0%, var(--t2r-white) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--t2r-yellow) 0%, var(--t2r-white) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--t2r-yellow) 0%, var(--t2r-blue) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--t2r-white);
+            font-size: 1.2rem;
+            border: 2px solid var(--t2r-yellow-light);
+        }
+        
+        .user-details {
+            text-align: right;
+        }
+        
+        .user-details .name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--t2r-white);
+        }
+        
+        .user-details .role {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            color: var(--t2r-yellow-light);
+        }
+        
+        /* Main Layout */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+            padding: 1rem;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 30, 55, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem 0;
+            margin-right: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+        
+        .nav-section {
+            padding: 0 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .nav-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--t2r-yellow-light);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--t2r-yellow);
+            transform: translateX(-10px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(26, 58, 108, 0.3);
+            color: var(--t2r-white);
+        }
+        
+        .nav-item:hover::before, .nav-item.active::before {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .nav-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--t2r-yellow-light);
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .card {
+            background: var(--gradient-card);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 1.8rem;
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--t2r-yellow), var(--t2r-blue-light));
+            z-index: 1;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--t2r-yellow) 0%, var(--t2r-white) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 1.2rem;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--t2r-yellow) 0%, var(--t2r-yellow-light) 100%);
+            color: var(--t2r-blue);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(249, 200, 14, 0.2);
+            border: 1px solid rgba(249, 200, 14, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--t2r-yellow-light) 0%, var(--t2r-yellow) 100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(249, 200, 14, 0.3);
+        }
+        
+        .btn:hover::after {
+            opacity: 1;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--t2r-yellow);
+            color: var(--t2r-yellow);
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(249, 200, 14, 0.1);
+        }
+        
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+        }
+        
+        /* Grid Layout */
+        .col-12 {
+            grid-column: span 12;
+        }
+        
+        .col-8 {
+            grid-column: span 8;
+        }
+        
+        .col-6 {
+            grid-column: span 6;
+        }
+        
+        .col-4 {
+            grid-column: span 4;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: rgba(26, 58, 108, 0.4);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--t2r-yellow) 0%, transparent 100%);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(26, 58, 108, 0.6);
+        }
+        
+        .stat-title {
+            font-size: 0.95rem;
+            color: var(--t2r-yellow-light);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--t2r-white);
+            margin-bottom: 0.3rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .stat-change {
+            font-size: 0.9rem;
+            color: var(--t2r-success);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+        
+        .stat-change.negative {
+            color: var(--t2r-danger);
+        }
+        
+        /* Charts */
+        .chart-container {
+            height: 320px;
+            position: relative;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        thead {
+            background: rgba(26, 58, 108, 0.6);
+        }
+        
+        th, td {
+            padding: 15px 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--t2r-white);
+        }
+        
+        th {
+            color: var(--t2r-yellow-light);
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            background: rgba(20, 35, 60, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        
+        tr:hover {
+            background: rgba(26, 58, 108, 0.3);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--t2r-white);
+        }
+        
+        .badge-success {
+            background: rgba(56, 161, 105, 0.2);
+            color: #9ae6b4;
+        }
+        
+        .badge-warning {
+            background: rgba(221, 107, 32, 0.2);
+            color: #fbd38d;
+        }
+        
+        .badge-info {
+            background: rgba(66, 153, 225, 0.2);
+            color: #90cdf4;
+        }
+        
+        .badge-primary {
+            background: rgba(26, 58, 108, 0.4);
+            color: var(--t2r-yellow-light);
+        }
+        
+        .agent-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .agent-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--t2r-yellow) 0%, var(--t2r-blue) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--t2r-white);
+            font-size: 0.9rem;
+            border: 1px solid var(--t2r-yellow-light);
+        }
+        
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .full-width {
+            grid-column: span 2;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+            color: var(--t2r-yellow-light);
+            font-size: 0.95rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(10, 25, 47, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--t2r-white);
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--t2r-yellow);
+            box-shadow: 0 0 0 3px rgba(249, 200, 14, 0.2);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.8rem;
+        }
+        
+        .tab {
+            padding: 0.9rem 1.8rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .tab.active {
+            color: var(--t2r-yellow);
+        }
+        
+        .tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--t2r-yellow);
+        }
+        
+        /* Progress Bars */
+        .progress-container {
+            margin: 1.5rem 0;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            color: var(--t2r-white);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--t2r-yellow) 0%, var(--t2r-yellow-light) 100%);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(249, 200, 14, 0.3);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 15, 30, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .modal-content {
+            background: rgba(20, 35, 60, 0.95);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            background: rgba(26, 58, 108, 0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--t2r-yellow);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .close-modal:hover {
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
+        .footer a {
+            color: var(--t2r-yellow);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        /* Resource Links */
+        .resource-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: rgba(26, 58, 108, 0.4);
+            border-radius: 10px;
+            color: var(--t2r-yellow-light);
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .resource-link:hover {
+            background: rgba(26, 58, 108, 0.7);
+            transform: translateY(-3px);
+            color: white;
+        }
+        
+        /* Video Container */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(26, 58, 108, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            border-left: 4px solid var(--t2r-yellow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Brand Highlight */
+        .brand-highlight {
+            color: var(--t2r-yellow);
+            font-weight: bold;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .col-8 {
+                grid-column: span 12;
+            }
+            
+            .col-4 {
+                grid-column: span 12;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .full-width {
+                grid-column: span 1;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .col-6 {
+                grid-column: span 12;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .user-info {
+                align-self: flex-end;
+            }
+            
+            .resource-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-chart-line"></i>
+            Trade2Retire
+        </div>
+        <div class="user-info">
+            <div class="user-details">
+                <div class="name">Danny (Head of Support)</div>
+                <div class="role">Supervisor: Sophie, Stella, Somto</div>
+            </div>
+            <div class="user-avatar">D</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="nav-section">
+                <div class="nav-title">Dashboard</div>
+                <div class="nav-item active" data-page="overview">
+                    <i class="fas fa-home"></i>
+                    Overview
+                </div>
+                <div class="nav-item" data-page="new-entry">
+                    <i class="fas fa-plus-circle"></i>
+                    New Client Entry
+                </div>
+                <div class="nav-item" data-page="kingdom-capital">
+                    <i class="fas fa-crown"></i>
+                    Kingdom Capital Project
+                </div>
+                <div class="nav-item" data-page="conversion">
+                    <i class="fas fa-sync-alt"></i>
+                    Conversion Tracking
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Reporting</div>
+                <div class="nav-item" data-page="daily-report">
+                    <i class="fas fa-file-alt"></i>
+                    Daily Report
+                </div>
+                <div class="nav-item" data-page="weekly-report">
+                    <i class="fas fa-calendar-week"></i>
+                    Weekly Report
+                </div>
+                <div class="nav-item" data-page="monthly-report">
+                    <i class="fas fa-calendar-alt"></i>
+                    Monthly Report
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Team</div>
+                <div class="nav-item" data-page="team-performance">
+                    <i class="fas fa-user-friends"></i>
+                    Team Performance
+                </div>
+                <div class="nav-item" data-page="recent-activity">
+                    <i class="fas fa-history"></i>
+                    Recent Activity
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Resources</div>
+                <div class="nav-item">
+                    <i class="fab fa-youtube"></i>
+                    YouTube Channel
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-link"></i>
+                    Trading Platforms
+                </div>
+                <div class="nav-item">
+                    <i class="fab fa-telegram"></i>
+                    Telegram Channel
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats Overview -->
+            <div class="col-12 animate-in">
+                <div class="stats-grid">
+                    <div class="stat-card animate-in delay-1">
+                        <div class="stat-title">
+                            <i class="fas fa-users"></i>
+                            Total Clients
+                        </div>
+                        <div class="stat-value" id="total-clients">184</div>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i>
+                            12% from last month
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card animate-in delay-2">
+                        <div class="stat-title">
+                            <i class="fas fa-crown"></i>
+                            Kingdom Capital
+                        </div>
+                        <div class="stat-value" id="kingdom-count">42</div>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i>
+                            5 new this week
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card animate-in delay-3">
+                        <div class="stat-title">
+                            <i class="fas fa-sync-alt"></i>
+                            Conversion Rate
+                        </div>
+                        <div class="stat-value" id="conversion-rate">38%</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-arrow-down"></i>
+                            2% from last month
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card animate-in delay-4">
+                        <div class="stat-title">
+                            <i class="fas fa-check-circle"></i>
+                            Resolved Issues
+                        </div>
+                        <div class="stat-value" id="resolved-rate">96%</div>
+                        <div class="stat-change">
+                            <i class="fas fa-arrow-up"></i>
+                            4% improvement
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Row -->
+            <div class="col-8">
+                <div class="card animate-in delay-1">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Client Acquisition & Conversion
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-outline btn-sm">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="acquisitionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team Performance -->
+            <div class="col-4">
+                <div class="card animate-in delay-2">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-trophy"></i>
+                            Team Performance
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-sm">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>Sophie</span>
+                            <span>84%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 84%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>Stella</span>
+                            <span>76%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 76%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span>Somto</span>
+                            <span>92%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 92%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="tabs">
+                        <div class="tab active">Conversion</div>
+                        <div class="tab">Retention</div>
+                        <div class="tab">Satisfaction</div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="teamChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kingdom Capital Project -->
+            <div class="col-6">
+                <div class="card animate-in delay-3">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-crown"></i>
+                            Kingdom Capital Project
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn" id="add-participant">
+                                <i class="fas fa-plus"></i> Add Participant
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Start Date</th>
+                                <th>Progress</th>
+                                <th>Status</th>
+                                <th>Conversion Potential</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kingdom-table">
+                            <!-- Kingdom data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="col-6">
+                <div class="card animate-in delay-4">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-history"></i>
+                            Recent Support Activity
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Agent</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activity-table">
+                            <!-- Activity data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- YouTube Video -->
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fab fa-youtube"></i>
+                            Trade2Retire TV
+                        </div>
+                    </div>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/O5C5xw4lJt0" title="Trade2Retire YouTube Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div style="text-align: center; padding: 1rem;">
+                        <a href="https://www.youtube.com/@Trade2RetireTV" target="_blank" class="btn">
+                            <i class="fab fa-youtube"></i> Subscribe to our Channel
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resource Links -->
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-link"></i>
+                            Trading Resources
+                        </div>
+                    </div>
+                    <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 15px;">
+                        <a href="https://track.deriv.com/_O_RMaaNDYlAKqFKZ7JdnQ2Nd7ZgqdRLk/1/" target="_blank" class="resource-link">
+                            <i class="fas fa-chart-line"></i>
+                            DERIV Trading Platform
+                        </a>
+                        <a href="https://hfm.com/?refid=30437847" target="_blank" class="resource-link">
+                            <i class="fas fa-dollar-sign"></i>
+                            HFM Broker
+                        </a>
+                        <a href="https://t.me/trade2retirebackup" target="_blank" class="resource-link">
+                            <i class="fab fa-telegram"></i>
+                            Telegram Channel
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Report Generator -->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-file-alt"></i>
+                            Report Generator
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Report Type</label>
+                            <select id="report-type">
+                                <option>Daily Summary</option>
+                                <option>Weekly Performance</option>
+                                <option>Monthly Analytics</option>
+                                <option>Kingdom Capital Progress</option>
+                                <option>Team Performance Review</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Date Range</label>
+                            <select id="date-range">
+                                <option>Today</option>
+                                <option>Last 7 Days</option>
+                                <option>Last 30 Days</option>
+                                <option>This Month</option>
+                                <option>Custom Range</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Team Members</label>
+                            <select id="team-members">
+                                <option>All Team Members</option>
+                                <option>Sophie Only</option>
+                                <option>Stella Only</option>
+                                <option>Somto Only</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Client Type</label>
+                            <select id="client-type">
+                                <option>All Clients</option>
+                                <option>Paid Clients Only</option>
+                                <option>Kingdom Capital Only</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>Additional Notes</label>
+                            <textarea id="additional-notes" rows="3" placeholder="Add any additional comments for the report..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button class="btn" id="preview-report">
+                                <i class="fas fa-eye"></i> Preview Report
+                            </button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button class="btn" id="send-report">
+                                <i class="fas fa-paper-plane"></i> Send to Director
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- New Entry Modal -->
+    <div class="modal" id="new-entry-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">New Client Entry</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="client-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Client Name</label>
+                            <input type="text" id="client-name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Client Type</label>
+                            <select id="client-type-select" required>
+                                <option value="Paid">Paid Client</option>
+                                <option value="Kingdom Capital">Kingdom Capital</option>
+                                <option value="Prospect">Prospective Client</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="status" required>
+                                <option value="Contacted">Contacted</option>
+                                <option value="Follow-up">Follow-up Needed</option>
+                                <option value="Onboarded">Onboarded to Mentorship</option>
+                                <option value="Converted">Converted to Paid</option>
+                                <option value="Rejected">Not Interested</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Agent</label>
+                            <select id="agent" required>
+                                <option value="Sophie">Sophie</option>
+                                <option value="Stella">Stella</option>
+                                <option value="Somto">Somto</option>
+                                <option value="Danny">Danny</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>Notes</label>
+                            <textarea id="notes" rows="4" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i> Save Entry
+                            </button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="button" class="btn btn-outline close-modal">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-message">Operation completed successfully!</span>
+    </div>
+    
+    <footer class="footer">
+        <p><span class="brand-highlight">Trade2Retire</span> Customer Support Dashboard • Data updated in real-time • © 2023 Trade2Retire Academy</p>
+        <p>Website: <a href="https://trade2retire.org" target="_blank">trade2retire.org</a> • Facebook: <a href="https://web.facebook.com/profile.php?id=61575155425596" target="_blank">Trade2Retire Facebook</a></p>
+        <div class="resource-links">
+            <a href="https://www.youtube.com/@Trade2RetireTV" target="_blank"><i class="fab fa-youtube"></i> YouTube Channel</a>
+            <a href="https://track.deriv.com/_O_RMaaNDYlAKqFKZ7JdnQ2Nd7ZgqdRLk/1/" target="_blank"><i class="fas fa-chart-line"></i> DERIV</a>
+            <a href="https://hfm.com/?refid=30437847" target="_blank"><i class="fas fa-dollar-sign"></i> HFM</a>
+            <a href="https://t.me/trade2retirebackup" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+        </div>
+    </footer>
+    
+    <script>
+        // Initialize data with localStorage for persistence
+        let supportData = JSON.parse(localStorage.getItem('trade2retireData')) || {
+            clients: 184,
+            kingdomParticipants: 42,
+            conversionRate: 38,
+            resolvedRate: 96,
+            kingdomData: [
+                {name: "John Adebayo", startDate: "Jun 15, 2023", progress: 65, status: "Active", potential: "High"},
+                {name: "Sarah Johnson", startDate: "Jun 20, 2023", progress: 45, status: "Active", potential: "Medium"},
+                {name: "Michael Chen", startDate: "May 28, 2023", progress: 90, status: "Completed", potential: "High"},
+                {name: "Fatima Nwosu", startDate: "Jun 10, 2023", progress: 30, status: "Active", potential: "Medium"},
+                {name: "David Okonkwo", startDate: "Jun 22, 2023", progress: 15, status: "Active", potential: "Medium"}
+            ],
+            recentActivity: [
+                {client: "James Wilson", type: "Paid", agent: "Sophie", status: "Resolved", time: "2 hours ago"},
+                {client: "Emma Thompson", type: "Kingdom", agent: "Stella", status: "Follow-up", time: "4 hours ago"},
+                {client: "Robert Garcia", type: "Paid", agent: "Somto", status: "Converted", time: "5 hours ago"},
+                {client: "Lisa Anderson", type: "Kingdom", agent: "Sophie", status: "Pending", time: "7 hours ago"},
+                {client: "Thomas Brown", type: "Paid", agent: "Stella", status: "Resolved", time: "9 hours ago"}
+            ]
+        };
+
+        // Function to save data to localStorage
+        function saveData() {
+            localStorage.setItem('trade2retireData', JSON.stringify(supportData));
+        }
+
+        // Function to update stats display
+        function updateStats() {
+            document.getElementById('total-clients').textContent = supportData.clients;
+            document.getElementById('kingdom-count').textContent = supportData.kingdomParticipants;
+            document.getElementById('conversion-rate').textContent = supportData.conversionRate + '%';
+            document.getElementById('resolved-rate').textContent = supportData.resolvedRate + '%';
+        }
+
+        // Function to render Kingdom Capital table
+        function renderKingdomTable() {
+            const kingdomTable = document.getElementById('kingdom-table');
+            kingdomTable.innerHTML = '';
+            
+            supportData.kingdomData.forEach(participant => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${participant.name}</td>
+                    <td>${participant.startDate}</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${participant.progress}%"></div>
+                        </div>
+                    </td>
+                    <td><span class="badge ${participant.status === 'Active' ? 'badge-warning' : 'badge-success'}">${participant.status}</span></td>
+                    <td><span class="badge ${participant.potential === 'High' ? 'badge-success' : 'badge-info'}">${participant.potential}</span></td>
+                `;
+                kingdomTable.appendChild(row);
+            });
+        }
+
+        // Function to render Recent Activity table
+        function renderActivityTable() {
+            const activityTable = document.getElementById('activity-table');
+            activityTable.innerHTML = '';
+            
+            supportData.recentActivity.forEach(activity => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${activity.client}</td>
+                    <td><span class="badge ${activity.type === 'Paid' ? 'badge-primary' : 'badge-info'}">${activity.type}</span></td>
+                    <td>
+                        <div class="agent-badge">
+                            <div class="agent-avatar">${activity.agent.charAt(0)}</div>
+                            ${activity.agent}
+                        </div>
+                    </td>
+                    <td><span class="badge ${activity.status === 'Resolved' || activity.status === 'Converted' ? 'badge-success' : 'badge-warning'}">${activity.status}</span></td>
+                    <td>${activity.time}</td>
+                `;
+                activityTable.appendChild(row);
+            });
+        }
+        
+        // Function to show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const messageElement = document.getElementById('notification-message');
+            
+            messageElement.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize charts and functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize stats and tables
+            updateStats();
+            renderKingdomTable();
+            renderActivityTable();
+            
+            // Acquisition Chart
+            const acquisitionCtx = document.getElementById('acquisitionChart').getContext('2d');
+            const acquisitionChart = new Chart(acquisitionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [
+                        {
+                            label: 'Kingdom Capital',
+                            data: [15, 22, 18, 25, 20, supportData.kingdomParticipants],
+                            backgroundColor: '#f9c80e',
+                            borderColor: '#e6b80e',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Paid Clients',
+                            data: [35, 42, 38, 45, 50, supportData.clients - supportData.kingdomParticipants],
+                            backgroundColor: '#1a3a6c',
+                            borderColor: '#152c52',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Conversions',
+                            data: [8, 12, 10, 15, 18, Math.floor(supportData.clients * (supportData.conversionRate/100))],
+                            backgroundColor: '#38a169',
+                            borderColor: '#2d8555',
+                            borderWidth: 1,
+                            type: 'line',
+                            fill: false,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.8)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Team Performance Chart
+            const teamCtx = document.getElementById('teamChart').getContext('2d');
+            const teamChart = new Chart(teamCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Conversion Rate', 'Response Time', 'Client Satisfaction', 'Issue Resolution', 'Upsell Ability'],
+                    datasets: [
+                        {
+                            label: 'Sophie',
+                            data: [85, 78, 92, 88, 75],
+                            backgroundColor: 'rgba(249, 200, 14, 0.2)',
+                            borderColor: '#f9c80e',
+                            pointBackgroundColor: '#f9c80e',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#f9c80e'
+                        },
+                        {
+                            label: 'Stella',
+                            data: [75, 85, 80, 90, 70],
+                            backgroundColor: 'rgba(26, 58, 108, 0.2)',
+                            borderColor: '#1a3a6c',
+                            pointBackgroundColor: '#1a3a6c',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#1a3a6c'
+                        },
+                        {
+                            label: 'Somto',
+                            data: [92, 88, 95, 85, 90],
+                            backgroundColor: 'rgba(56, 161, 105, 0.2)',
+                            borderColor: '#38a169',
+                            pointBackgroundColor: '#38a169',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#38a169'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 11
+                                },
+                                color: 'rgba(255, 255, 255, 0.8)'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: {
+                                backdropColor: 'transparent',
+                                color: 'rgba(255, 255, 255, 0.5)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: 'rgba(255, 255, 255, 0.8)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                });
+            });
+            
+            // Modal functionality
+            const modal = document.getElementById('new-entry-modal');
+            const openModalBtn = document.getElementById('add-participant');
+            const closeModalBtn = document.querySelectorAll('.close-modal');
+            
+            openModalBtn.addEventListener('click', () => {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeModalBtn.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Form submission
+            const clientForm = document.getElementById('client-form');
+            clientForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Get form values
+                const clientName = document.getElementById('client-name').value;
+                const clientType = document.getElementById('client-type-select').value;
+                const status = document.getElementById('status').value;
+                const agent = document.getElementById('agent').value;
+                const notes = document.getElementById('notes').value;
+                
+                // Create new client object
+                const newClient = {
+                    name: clientName,
+                    startDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                    progress: Math.floor(Math.random() * 30) + 10,
+                    status: status,
+                    potential: ['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)]
+                };
+                
+                // Add to kingdom data if it's a Kingdom Capital client
+                if (clientType === 'Kingdom Capital') {
+                    supportData.kingdomData.unshift(newClient);
+                    supportData.kingdomParticipants++;
+                }
+                
+                // Add to recent activity
+                const newActivity = {
+                    client: clientName,
+                    type: clientType === 'Kingdom Capital' ? 'Kingdom' : clientType,
+                    agent: agent,
+                    status: status,
+                    time: 'Just now'
+                };
+                
+                supportData.recentActivity.unshift(newActivity);
+                supportData.clients++;
+                
+                // Update UI and data
+                renderKingdomTable();
+                renderActivityTable();
+                updateStats();
+                saveData();
+                
+                // Reset form and close modal
+                clientForm.reset();
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                
+                // Show success notification
+                showNotification('New client added successfully!');
+            });
+            
+            // Send report functionality
+            document.getElementById('send-report').addEventListener('click', function() {
+                const reportType = document.getElementById('report-type').value;
+                
+                // Send email using EmailJS
+                emailjs.send("service_xxxxxxxx", "template_xxxxxxxx", {
+                    to_email: "trade2retire95@gmail.com",
+                    report_type: reportType,
+                    date_range: document.getElementById('date-range').value,
+                    team_members: document.getElementById('team-members').value,
+                    client_type: document.getElementById('client-type').value,
+                    notes: document.getElementById('additional-notes').value
+                })
+                .then(function(response) {
+                    showNotification(`Report sent successfully to trade2retire95@gmail.com!`);
+                }, function(error) {
+                    showNotification("Failed to send report. Please try again.");
+                });
+            });
+            
+            // Preview report functionality
+            document.getElementById('preview-report').addEventListener('click', function() {
+                showNotification("Report preview generated!");
+            });
+            
+            // Resource links in sidebar
+            document.querySelectorAll('.nav-section:last-child .nav-item').forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    const urls = [
+                        'https://www.youtube.com/@Trade2RetireTV',
+                        'https://track.deriv.com/_O_RMaaNDYlAKqFKZ7JdnQ2Nd7ZgqdRLk/1/',
+                        'https://t.me/trade2retirebackup'
+                    ];
+                    window.open(urls[index], '_blank');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
